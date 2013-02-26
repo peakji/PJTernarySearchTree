@@ -1,7 +1,14 @@
 PJTernarySearchTree
 ===================
 
-An implementation of Ternary Search Tree for Mac OS X and iOS.
+PJTernarySearchTree is an Objective-C implementation of Ternary Search Tree for Mac OS X and iOS.
+It was designed to be a data structure/tool for text autocompletion, however, you may use it as a simple in-memory database because it supports any objects(see the protocol).
+
+For iOS developers, PJTernarySearchTree is a great data source for [HTAutocompleteTextField](https://github.com/hoteltonight/HTAutocompleteTextField "HTAutocompleteTextField").
+
+I'm using PJTernarySearchTree in [Mammoth Web Browser](https://itunes.apple.com/us/app/mammoth-web-browser-premium/id464736531?ls=1&mt=8 "Mammoth Web Browser") for URL autocompletion and history indexing, it can search through 50k+ items within 0.007s. With auto pruning, it runs even faster in realtime typing autocompletion (e.g. "g"->"gi"->"git"...).
+
+# Features:
 
 - Store any objects
 - Auto pruning (great for realtime autocompletion)
@@ -9,6 +16,12 @@ An implementation of Ternary Search Tree for Mac OS X and iOS.
 - Unicode support
 - Count limited retrieving
 - Sync or Async
+
+Todos:
+
+- Optimize memory usage
+- Better pruning/cache mechanism
+- Maybe a disk storage version?
 
 # Managing item/string
 

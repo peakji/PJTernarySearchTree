@@ -51,8 +51,8 @@ NSArray * retrieved = nil;
         NSLog(@"Callback: %@",retrieved);
     }];
     
-    [tree removeString:@"http://www.face.com"];
-    retrieved = [tree retrievePrefix:@"http://www.fa" countLimit:0];
+    [tree removeString:@"http://www.peakji.com"];
+    retrieved = [tree retrievePrefix:@"http://www.pe" countLimit:0];
     NSLog(@"Remove one: %@",retrieved);
 ~~~
 

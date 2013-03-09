@@ -218,7 +218,7 @@
 }
 
 - (BOOL)isEmptyNode:(PJTernarySearchTreeNode *)node{
-    if(node.item==nil && node->descendingChild==nil && node->equalChild==nil && node->ascendingChild==nil)
+    if((node==nil)||(node.item==nil && node->descendingChild==nil && node->equalChild==nil && node->ascendingChild==nil))
     {
         return YES;
     }

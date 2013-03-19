@@ -37,7 +37,8 @@
     NSArray * retrieved = nil;
     
     // countLimit = 0 : no limit
-    retrieved = [tree retrievePrefix:@"http://" countLimit:0];  
+    // or use [tree retrievePrefix:@"http://"]
+    retrieved = [tree retrievePrefix:@"http://" countLimit:0];
     NSLog(@"Return all matches: %@",retrieved);
     
     
@@ -58,7 +59,9 @@
     
     
     // Remove a string (or object)
+    // For non-string items, use [tree removeItem:obj];
     [tree removeString:@"http://www.face.com"];
+    
     retrieved = [tree retrievePrefix:@"http://www.fa" countLimit:0];
     NSLog(@"Remove one: %@",retrieved);
 

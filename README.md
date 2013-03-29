@@ -54,6 +54,15 @@ NSArray * retrieved = nil;
     [tree removeString:@"http://www.peakji.com"];
     retrieved = [tree retrievePrefix:@"http://www.pe" countLimit:0];
     NSLog(@"Remove one: %@",retrieved);
+
+    // Nothing will happen...
+    [tagSearchTree insertString:@""];
+    [tagSearchTree insertString:nil];
+    
+    // retrieve 'nil' or @"" will get all items
+    [tagSearchTree insertString:@"def"];
+    [tagSearchTree insertString:@"ghi"];
+    
 ~~~
 
 # Serializing

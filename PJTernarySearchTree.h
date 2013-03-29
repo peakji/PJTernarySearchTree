@@ -53,6 +53,9 @@ typedef void(^PJTernarySearchResultBlock)(NSArray * retrieved);
 - (void)retrievePrefix:(NSString *)prefix callback:(PJTernarySearchResultBlock)callback;
 - (void)retrievePrefix:(NSString *)prefix countLimit:(NSUInteger)countLimit callback:(PJTernarySearchResultBlock)callback;
 
+- (NSArray *)retrieveAll;
+- (NSArray *)retrieveAllWithCountLimit:(NSUInteger)countLimit;
+
 /* Serializing */
 
 - (void)saveTreeToFile:(NSString *)path;

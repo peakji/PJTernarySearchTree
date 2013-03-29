@@ -395,6 +395,28 @@
 
 #pragma mark - Retrieving
 
+- (NSArray *)retrieveAll{
+    return [self retrieveAllWithCountLimit:0];
+}
+
+- (NSArray *)retrieveAllWithCountLimit:(NSUInteger)countLimit{
+
+    NSMutableArray* output = [NSMutableArray array];
+    [PJTernarySearchTree addItems:self.rootNode toArray:output limit:countLimit];
+    
+    [self retrieveNodeFrom:self.rootNode->descendingChild toArray:output limit:countLimit];
+    [self retrieveNodeFrom:self.rootNode->equalChild toArray:output limit:countLimit];
+    [self retrieveNodeFrom:self.rootNode->ascendingChild toArray:output limit:countLimit];
+    
+    if ((countLimit!=0)&&([output count]>=countLimit)) {
+        return [NSArray arrayWithArray:[output objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, countLimit)]]];
+    }
+    else
+    {
+        return [NSArray arrayWithArray:output];
+    }
+}
+
 - (NSArray *)retrievePrefix:(NSString *)prefix countLimit:(NSUInteger)countLimit{
     
     if(prefix==nil)
@@ -405,7 +427,7 @@
     PJTernarySearchTreeNode * prefixedRoot = nil;
     if(prefix.length==0)
     {
-        prefixedRoot = self.rootNode;
+        return [self retrieveAllWithCountLimit:countLimit];
     }
     else
     {

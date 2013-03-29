@@ -79,8 +79,11 @@
     [tagSearchTree insertString:nil];
     
     // retrieve 'nil' or @"" will get all items
+    [tagSearchTree insertString:@"def"];
+    [tagSearchTree insertString:@"ghi"];
     NSLog(@"%@",[tagSearchTree retrievePrefix:nil]);
     NSLog(@"%@",[tagSearchTree retrievePrefix:@""]);
+    
     
     return YES;
 }

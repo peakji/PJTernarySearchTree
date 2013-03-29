@@ -48,10 +48,17 @@ typedef void(^PJTernarySearchResultBlock)(NSArray * retrieved);
 /* Retrieving */
 
 - (NSArray *)retrievePrefix:(NSString *)prefix;
+- (NSArray *)retrievePrefix:(NSString *)prefix caseSensitive:(BOOL)sensitive;       // default to YES
 - (NSArray *)retrievePrefix:(NSString *)prefix countLimit:(NSUInteger)countLimit;    // 0 = no limit
+- (NSArray *)retrievePrefix:(NSString *)prefix countLimit:(NSUInteger)countLimit caseSensitive:(BOOL)sensitive;
 
 - (void)retrievePrefix:(NSString *)prefix callback:(PJTernarySearchResultBlock)callback;
+- (void)retrievePrefix:(NSString *)prefix caseSensitive:(BOOL)sensitive callback:(PJTernarySearchResultBlock)callback;
 - (void)retrievePrefix:(NSString *)prefix countLimit:(NSUInteger)countLimit callback:(PJTernarySearchResultBlock)callback;
+- (void)retrievePrefix:(NSString *)prefix countLimit:(NSUInteger)countLimit caseSensitive:(BOOL)sensitive callback:(PJTernarySearchResultBlock)callback;
+
+- (NSArray *)retrieveAll;
+- (NSArray *)retrieveAllWithCountLimit:(NSUInteger)countLimit;
 
 /* Serializing */
 

@@ -323,7 +323,45 @@
     return array;
 }
 
-- (PJTernarySearchTreeNode *)locatePrefixRoot:(NSString*)prefix withRootNode:(PJTernarySearchTreeNode *)root{
+- (unichar)lowerCaseChar:(unichar)ch{
+    if(ch>='A'&&ch<='Z')
+    {
+        return ch+'a'-'A';
+    }
+    return ch;
+}
+
+- (BOOL)startWithCap:(NSString *)str{
+    unichar first = [str characterAtIndex:0];
+    if(first>='A'&&first<='Z')
+    {
+        return YES;
+    }
+    return NO;
+}
+
+- (short)compareCharA:(unichar)a toCharB:(unichar)b caseSensitive:(BOOL)sensitive{
+
+    if(sensitive==NO)
+    {
+        a = [self lowerCaseChar:a];
+        b = [self lowerCaseChar:b];
+    }
+
+    if(a<b){
+        return -1;
+    }
+    else if(a==b)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+}
+
+- (PJTernarySearchTreeNode *)locatePrefixRoot:(NSString*)prefix withRootNode:(PJTernarySearchTreeNode *)root caseSensitive:(BOOL)sensitive{
     
     int index = 0;
     
@@ -342,14 +380,17 @@
         }
         
         unichar ch = [prefix characterAtIndex:index];
-        if (ch < node.nodeChar) {
+        
+        short m = [self compareCharA:ch toCharB:node.nodeChar caseSensitive:sensitive];
+
+        if (m<0) {
             if (!node->descendingChild) {
                 return nil;
             }
             node = node->descendingChild;
             
             continue;
-        } else if (ch == node.nodeChar) {
+        } else if (m==0) {
             found = node;
             node = node->equalChild;
             index++;
@@ -395,8 +436,63 @@
 
 #pragma mark - Retrieving
 
-- (NSArray *)retrievePrefix:(NSString *)prefix countLimit:(NSUInteger)countLimit{
+- (NSArray *)retrieveAll{
+    return [self retrieveAllWithCountLimit:0];
+}
+
+- (NSArray *)retrieveAllWithCountLimit:(NSUInteger)countLimit{
+    NSMutableArray* output = [NSMutableArray array];
     
+    [PJTernarySearchTree addItems:self.rootNode toArray:output limit:countLimit];
+    
+    [self retrieveNodeFrom:self.rootNode->descendingChild toArray:output limit:countLimit];
+    [self retrieveNodeFrom:self.rootNode->equalChild toArray:output limit:countLimit];
+    [self retrieveNodeFrom:self.rootNode->ascendingChild toArray:output limit:countLimit];
+    
+    if ((countLimit!=0)&&([output count]>=countLimit)) {
+        return [NSArray arrayWithArray:[output objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, countLimit)]]];
+    }
+    else
+    {
+        return [NSArray arrayWithArray:output];
+    }
+}
+
+- (NSArray *)retrievePrefix:(NSString *)prefix countLimit:(NSUInteger)countLimit caseSensitive:(BOOL)sensitive{
+    
+    if(sensitive==NO){
+        NSString * oppoString = nil;
+        if([self startWithCap:prefix])
+        {
+            oppoString = [prefix lowercaseString];
+        }
+        else
+        {
+            oppoString = [prefix uppercaseString];
+        }
+        
+        NSMutableArray* output = [NSMutableArray array];
+        NSLog(@"%@",oppoString);
+        [output addObjectsFromArray:[self __retrievePrefix:prefix countLimit:countLimit caseSensitive:NO]];
+        [output addObjectsFromArray:[self __retrievePrefix:oppoString countLimit:countLimit caseSensitive:NO]];
+        
+        if ((countLimit!=0)&&([output count]>=countLimit)) {
+            return [NSArray arrayWithArray:[output objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, countLimit)]]];
+        }
+        else
+        {
+            return [NSArray arrayWithArray:output];
+        }
+    }
+    else
+    {
+        return [self __retrievePrefix:prefix countLimit:countLimit caseSensitive:YES];
+    }
+}
+
+
+- (NSArray *)__retrievePrefix:(NSString *)prefix countLimit:(NSUInteger)countLimit caseSensitive:(BOOL)sensitive{
+
     if(prefix==nil)
     {
         prefix = @"";
@@ -405,17 +501,17 @@
     PJTernarySearchTreeNode * prefixedRoot = nil;
     if(prefix.length==0)
     {
-        prefixedRoot = self.rootNode;
+        return [self retrieveAllWithCountLimit:countLimit];
     }
     else
     {
         if(self.lastPrefix!=nil && ([prefix hasPrefix:self.lastPrefix]==YES))
         {
-            prefixedRoot = [self locatePrefixRoot:prefix withRootNode:self.lastResultNode];
+            prefixedRoot = [self locatePrefixRoot:prefix withRootNode:self.lastResultNode caseSensitive:sensitive];
         }
         else
         {
-            prefixedRoot = [self locatePrefixRoot:prefix withRootNode:nil];
+            prefixedRoot = [self locatePrefixRoot:prefix withRootNode:nil caseSensitive:sensitive];
         }
     }
     
@@ -439,18 +535,36 @@
     {
         return [NSArray arrayWithArray:output];
     }
+    
+}
+
+
+
+
+
+- (NSArray *)retrievePrefix:(NSString *)prefix countLimit:(NSUInteger)countLimit{
+    return [self retrievePrefix:prefix countLimit:countLimit caseSensitive:YES];
+}
+
+- (NSArray *)retrievePrefix:(NSString *)prefix caseSensitive:(BOOL)sensitive{
+    return [self retrievePrefix:prefix countLimit:0 caseSensitive:sensitive];
 }
 
 - (NSArray *)retrievePrefix:(NSString *)prefix{
     
-    return [self retrievePrefix:prefix countLimit:0];
+    return [self retrievePrefix:prefix countLimit:0 caseSensitive:YES];
 }
 
 - (void)retrievePrefix:(NSString *)prefix callback:(PJTernarySearchResultBlock)callback{
-    [self retrievePrefix:prefix countLimit:0 callback:callback];
+    [self retrievePrefix:prefix countLimit:0 caseSensitive:YES callback:callback];
 }
 
-- (void)retrievePrefix:(NSString *)prefix countLimit:(NSUInteger)countLimit callback:(PJTernarySearchResultBlock)callback{
+- (void)retrievePrefix:(NSString *)prefix caseSensitive:(BOOL)sensitive callback:(PJTernarySearchResultBlock)callback{
+    
+    [self retrievePrefix:prefix countLimit:0 caseSensitive:sensitive callback:callback];
+}
+
+- (void)retrievePrefix:(NSString *)prefix countLimit:(NSUInteger)countLimit caseSensitive:(BOOL)sensitive callback:(PJTernarySearchResultBlock)callback{
     
     if(!callback)
     {
@@ -463,7 +577,7 @@
     
     dispatch_async(ternary_search_queue, ^{
         
-        NSArray * array = [self retrievePrefix:prefix countLimit:countLimit];
+        NSArray * array = [self retrievePrefix:prefix countLimit:countLimit caseSensitive:sensitive];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -471,6 +585,12 @@
             
         });
     });
+    
+}
+
+- (void)retrievePrefix:(NSString *)prefix countLimit:(NSUInteger)countLimit callback:(PJTernarySearchResultBlock)callback{
+    
+    [self retrievePrefix:prefix countLimit:countLimit caseSensitive:YES callback:callback];
 }
 
 #pragma mark - Serializing

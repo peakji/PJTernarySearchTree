@@ -64,7 +64,23 @@
     
     retrieved = [tree retrievePrefix:@"http://www.fa" countLimit:0];
     NSLog(@"Remove one: %@",retrieved);
-
+    
+    
+    // Test 2
+    
+    PJTernarySearchTree * tagSearchTree = [[PJTernarySearchTree alloc] init];
+    [tagSearchTree insertString:@"abc"];
+    
+    // Return nothing
+    NSLog(@"%@",[tagSearchTree retrievePrefix:@"abcd"]);
+    
+    // Nothing will happen...
+    [tagSearchTree insertString:@""];
+    [tagSearchTree insertString:nil];
+    
+    // retrieve 'nil' or @"" will get all items
+    NSLog(@"%@",[tagSearchTree retrievePrefix:nil]);
+    NSLog(@"%@",[tagSearchTree retrievePrefix:@""]);
     
     return YES;
 }

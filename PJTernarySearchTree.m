@@ -175,6 +175,11 @@
 
 - (void)insertItem:(id<PJSearchableItem>)item{
     
+    if(item==nil||([item isKindOfClass:[NSString class]]&&((NSString *)item).length==0))
+    {
+        return;
+    }
+    
     NSString * stringValue = [item stringValue];
     
     PJTernarySearchTreeNode * __strong * found = &(self->rootNode),* node = self->rootNode,* parent = nil;
@@ -332,6 +337,10 @@
     
     while (index < [prefix length]) {
         
+        if(!node){
+            return nil;
+        }
+        
         unichar ch = [prefix characterAtIndex:index];
         if (ch < node.nodeChar) {
             if (!node->descendingChild) {
@@ -388,15 +397,26 @@
 
 - (NSArray *)retrievePrefix:(NSString *)prefix countLimit:(NSUInteger)countLimit{
     
-    PJTernarySearchTreeNode * prefixedRoot = nil;
-    
-    if(self.lastPrefix!=nil && ([prefix hasPrefix:self.lastPrefix]==YES))
+    if(prefix==nil)
     {
-        prefixedRoot = [self locatePrefixRoot:prefix withRootNode:self.lastResultNode];
+        prefix = @"";
+    }
+    
+    PJTernarySearchTreeNode * prefixedRoot = nil;
+    if(prefix.length==0)
+    {
+        prefixedRoot = self.rootNode;
     }
     else
     {
-        prefixedRoot = [self locatePrefixRoot:prefix withRootNode:nil];
+        if(self.lastPrefix!=nil && ([prefix hasPrefix:self.lastPrefix]==YES))
+        {
+            prefixedRoot = [self locatePrefixRoot:prefix withRootNode:self.lastResultNode];
+        }
+        else
+        {
+            prefixedRoot = [self locatePrefixRoot:prefix withRootNode:nil];
+        }
     }
     
     if(!prefixedRoot)

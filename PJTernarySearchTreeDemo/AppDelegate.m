@@ -5,7 +5,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-
+    
     NSString * savePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"test.tree"];
     
     
@@ -33,7 +33,7 @@
         
         [tree saveTreeToFile:savePath];
     }
-    
+    /*
     NSArray * retrieved = nil;
     
     // countLimit = 0 : no limit
@@ -81,6 +81,15 @@
     // retrieve 'nil' or @"" will get all items
     NSLog(@"%@",[tagSearchTree retrievePrefix:nil]);
     NSLog(@"%@",[tagSearchTree retrievePrefix:@""]);
+    */
+    
+    PJTernarySearchTree *taagSearchTree = [[PJTernarySearchTree alloc] init];
+    [taagSearchTree insertString:@"abc"];
+    [taagSearchTree insertString:@"ABC"];
+    [taagSearchTree insertString:@"def"];
+    [taagSearchTree insertString:@"ghi"];
+    NSLog(@"%@", [taagSearchTree retrievePrefix:@"ab"]);
+    NSLog(@"%@", [taagSearchTree retrievePrefix:@"AB" caseSensitive:NO]);
     
     return YES;
 }

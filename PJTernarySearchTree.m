@@ -403,7 +403,10 @@
 
     NSMutableArray* output = [NSMutableArray array];
     [PJTernarySearchTree addItems:self.rootNode toArray:output limit:countLimit];
-    
+    if(self.rootNode==nil)
+    {
+        return [NSArray array];
+    }
     [self retrieveNodeFrom:self.rootNode->descendingChild toArray:output limit:countLimit];
     [self retrieveNodeFrom:self.rootNode->equalChild toArray:output limit:countLimit];
     [self retrieveNodeFrom:self.rootNode->ascendingChild toArray:output limit:countLimit];

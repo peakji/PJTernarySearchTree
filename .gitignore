@@ -1,0 +1,8 @@
+
+*.xccheckout
+
+.DS_Store
+
+*.xcuserstate
+
+UserInterfaceState.xcuserstate

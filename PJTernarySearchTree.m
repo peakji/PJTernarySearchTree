@@ -249,7 +249,7 @@
     
     if([self isEmptyNode:node]==YES)
     {
-        for(int i = [route count]-1;i>=0;i--)
+        for(NSInteger i = [route count]-1;i>=0;i--)
         {
             PJTernarySearchTreeNode * checkNode = [route objectAtIndex:i];
             
@@ -290,7 +290,7 @@
 
 - (NSMutableArray *)routePrefixRoot:(NSString*)prefix{
     
-    int index = 0;
+    NSInteger index = 0;
     
     NSMutableArray * array = [NSMutableArray array];
     
@@ -325,7 +325,7 @@
 
 - (PJTernarySearchTreeNode *)locatePrefixRoot:(NSString*)prefix withRootNode:(PJTernarySearchTreeNode *)root{
     
-    int index = 0;
+    NSInteger index = 0;
     
     PJTernarySearchTreeNode * node = self->rootNode,* found;
     
